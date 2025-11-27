@@ -1,0 +1,65 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "west",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+                "build",
+				"-p","always",
+                "-b", "stm32f4_disco",
+                "--",
+                "-DOVERLAY_CONFIG=prj.conf",
+                "-DDTC_OVERLAY_FILE=disco_f4.overlay"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Config",
+            "type": "shell",
+            "command": "west build -t menuconfig",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash",
+            "type": "shell",
+            "command": "west flash",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash_",
+            "type": "shell",
+            //"command": "west flash --config stm32f4x.cfg",
+            "command": "west",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+                "flash",
+                "--config stm32f4x.cfg"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm -rf build",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}
