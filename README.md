@@ -1,0 +1,1 @@
+# zephyrTemplateF4
