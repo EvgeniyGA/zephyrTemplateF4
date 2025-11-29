@@ -6,10 +6,37 @@
 		zephyr,console = &cdc_acm_uart0;
 		zephyr,shell-uart = &cdc_acm_uart0;
     };
+	fstab {
+		compatible = "zephyr,fstab";
+		lfs1: lfs1 {
+			compatible = "zephyr,fstab,littlefs";
+			read-size = <1>;
+			prog-size = <16>;
+			cache-size = <256>;
+			lookahead-size = <32>;
+			block-cycles = <512>;
+			partition = <&lfs1_partition>;
+			mount-point = "/lfs1";
+		};
+	};
 	// cdc_ncm_eth0: cdc_ncm_eth0 {
 	// 	compatible = "zephyr,cdc-ncm-ethernet";
 	// 	remote-mac-address = "00005E005301";
 	// };
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Use second half of flash for the filesystem. */
+		lfs1_partition: partition@80000 {
+			label = "storage";
+			reg = <0x80000 DT_SIZE_K(512)>;
+		};
+	};
 };
 
 &zephyr_udc0 {
