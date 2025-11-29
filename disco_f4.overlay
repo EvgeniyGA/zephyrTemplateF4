@@ -13,6 +13,13 @@
 	status = "okay";
 };
 
+&i2c2 {
+	clock-frequency = <I2C_BITRATE_FAST>;
+	pinctrl-0 = <&i2c2_scl_pb10 &i2c2_sda_pb11>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
 &mac {
 	status = "okay";
 	pinctrl-0 = <&eth_rxd0_pc4

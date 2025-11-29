@@ -10,7 +10,6 @@
 #include <zephyr/posix/poll.h>
 
 #include <zephyr/kernel.h>
-#include <zephyr/net/tls_credentials.h>
 #include <zephyr/net/http/server.h>
 #include <zephyr/net/http/service.h>
 #include <zephyr/net/net_ip.h>
@@ -23,11 +22,7 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(net_http_server_sample, LOG_LEVEL_DBG);
 
-#if defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS) || defined(CONFIG_COVERAGE_GCOV)
-#define STACK_SIZE 4096
-#else
 #define STACK_SIZE 2048
-#endif
 
 #if defined(CONFIG_NET_TC_THREAD_COOPERATIVE)
 #define THREAD_PRIORITY K_PRIO_COOP(CONFIG_NUM_COOP_PRIORITIES - 1)
@@ -166,7 +161,6 @@ static void ws_echo_handler(void *ptr1, void *ptr2, void *ptr3)
 		cfg->bytes_received += received;
 		offset += received;
 
-#if !defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS)
 		/* To prevent fragmentation of the response, reply only if
 		 * buffer is full or there is no more data to read
 		 */
@@ -175,7 +169,7 @@ static void ws_echo_handler(void *ptr1, void *ptr2, void *ptr3)
 			  sizeof(cfg->recv_buffer) - offset,
 			  MSG_PEEK | MSG_DONTWAIT) < 0 &&
 		     (errno == EAGAIN || errno == EWOULDBLOCK))) {
-#endif
+
 			ret = sendall(client, cfg->recv_buffer, offset);
 			if (ret < 0) {
 				LOG_ERR("[%d] Failed to send data, closing socket",
@@ -191,9 +185,7 @@ static void ws_echo_handler(void *ptr1, void *ptr2, void *ptr3)
 			}
 
 			offset = 0;
-#if !defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS)
 		}
-#endif
 	}
 
 	*in_use = false;

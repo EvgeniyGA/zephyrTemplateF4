@@ -9,7 +9,6 @@
 #include <inttypes.h>
 
 #include <zephyr/kernel.h>
-#include <zephyr/net/tls_credentials.h>
 #include <zephyr/net/http/server.h>
 #include <zephyr/net/http/service.h>
 #include <zephyr/net/net_ip.h>
@@ -21,9 +20,9 @@
 #include <zephyr/sys/util_macro.h>
 #include <zephyr/net/net_config.h>
 
-// #if CONFIG_USB_DEVICE_STACK_NEXT
-// #include <sample_usbd.h>
-// #endif
+#if CONFIG_USB_DEVICE_STACK_NEXT
+#include <sample_usbd.h>
+#endif
 
 #include "ws.h"
 
@@ -274,84 +273,6 @@ HTTP_RESOURCE_DEFINE(ws_netstats_resource, test_http_service, "/", &ws_netstats_
 #endif /* CONFIG_NET_SAMPLE_WEBSOCKET_SERVICE */
 #endif /* CONFIG_NET_SAMPLE_HTTP_SERVICE */
 
-#if defined(CONFIG_NET_SAMPLE_HTTPS_SERVICE)
-#include "certificate.h"
-
-static const sec_tag_t sec_tag_list_verify_none[] = {
-		HTTP_SERVER_CERTIFICATE_TAG,
-#if defined(CONFIG_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED)
-		PSK_TAG,
-#endif
-	};
-
-static uint16_t test_https_service_port = CONFIG_NET_SAMPLE_HTTPS_SERVER_SERVICE_PORT;
-HTTPS_SERVICE_DEFINE(test_https_service, NULL, &test_https_service_port,
-		     CONFIG_HTTP_SERVER_MAX_CLIENTS, 10, NULL, NULL, NULL, sec_tag_list_verify_none,
-		     sizeof(sec_tag_list_verify_none));
-
-HTTP_RESOURCE_DEFINE(index_html_gz_resource_https, test_https_service, "/",
-		     &index_html_gz_resource_detail);
-
-HTTP_RESOURCE_DEFINE(main_js_gz_resource_https, test_https_service, "/main.js",
-		     &main_js_gz_resource_detail);
-
-HTTP_RESOURCE_DEFINE(echo_resource_https, test_https_service, "/dynamic", &echo_resource_detail);
-
-HTTP_RESOURCE_DEFINE(uptime_resource_https, test_https_service, "/uptime", &uptime_resource_detail);
-
-HTTP_RESOURCE_DEFINE(led_resource_https, test_https_service, "/led", &led_resource_detail);
-
-#if defined(CONFIG_NET_SAMPLE_WEBSOCKET_SERVICE)
-HTTP_RESOURCE_DEFINE(ws_echo_resource_https, test_https_service, "/ws_echo",
-		     &ws_echo_resource_detail);
-
-HTTP_RESOURCE_DEFINE(ws_netstats_resource_https, test_https_service, "/",
-		     &ws_netstats_resource_detail);
-#endif /* CONFIG_NET_SAMPLE_WEBSOCKET_SERVICE */
-#endif /* CONFIG_NET_SAMPLE_HTTPS_SERVICE */
-
-static void setup_tls(void)
-{
-#if defined(CONFIG_NET_SAMPLE_HTTPS_SERVICE)
-#if defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS)
-	int err;
-
-	err = tls_credential_add(HTTP_SERVER_CERTIFICATE_TAG,
-				 TLS_CREDENTIAL_PUBLIC_CERTIFICATE,
-				 server_certificate,
-				 sizeof(server_certificate));
-	if (err < 0) {
-		LOG_ERR("Failed to register public certificate: %d", err);
-	}
-
-	err = tls_credential_add(HTTP_SERVER_CERTIFICATE_TAG,
-				 TLS_CREDENTIAL_PRIVATE_KEY,
-				 private_key, sizeof(private_key));
-	if (err < 0) {
-		LOG_ERR("Failed to register private key: %d", err);
-	}
-
-#if defined(CONFIG_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED)
-	err = tls_credential_add(PSK_TAG,
-				 TLS_CREDENTIAL_PSK,
-				 psk,
-				 sizeof(psk));
-	if (err < 0) {
-		LOG_ERR("Failed to register PSK: %d", err);
-	}
-
-	err = tls_credential_add(PSK_TAG,
-				 TLS_CREDENTIAL_PSK_ID,
-				 psk_id,
-				 sizeof(psk_id) - 1);
-	if (err < 0) {
-		LOG_ERR("Failed to register PSK ID: %d", err);
-	}
-#endif /* defined(CONFIG_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED) */
-#endif /* defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS) */
-#endif /* defined(CONFIG_NET_SAMPLE_HTTPS_SERVICE) */
-}
-
 static int init_usb(void)
 {
 #if defined(CONFIG_USB_DEVICE_STACK_NEXT)
@@ -378,7 +299,6 @@ int main(void)
 {
 	init_usb();
 
-	setup_tls();
 	http_server_start();
 	return 0;
 }
