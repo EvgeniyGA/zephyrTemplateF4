@@ -1,8 +1,20 @@
 
 / {
 	chosen {
-        zephyr,console = &usart1;
-		zephyr,shell-uart = &usart1;
+        //zephyr,console = &usart1;
+		//zephyr,shell-uart = &usart1;
+		zephyr,console = &cdc_acm_uart0;
+		zephyr,shell-uart = &cdc_acm_uart0;
+    };
+	// cdc_ncm_eth0: cdc_ncm_eth0 {
+	// 	compatible = "zephyr,cdc-ncm-ethernet";
+	// 	remote-mac-address = "00005E005301";
+	// };
+};
+
+&zephyr_udc0 {
+    cdc_acm_uart0: cdc_acm_uart0 {
+        compatible = "zephyr,cdc-acm-uart";
     };
 };
 

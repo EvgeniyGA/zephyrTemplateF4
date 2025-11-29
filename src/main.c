@@ -297,7 +297,7 @@ static int init_usb(void)
 
 int main(void)
 {
-	init_usb();
+//	init_usb();
 
 	http_server_start();
 	return 0;
