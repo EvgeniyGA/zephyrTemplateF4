@@ -23,6 +23,7 @@
 #include <zephyr/fs/littlefs.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/storage/flash_map.h>
+#include <zephyr/settings/settings.h>
 
 #if CONFIG_USB_DEVICE_STACK_NEXT
 #include <sample_usbd.h>
@@ -379,7 +380,7 @@ static int littlefs_mount(struct fs_mount_t *mp)
 int main(void)
 {
 	int rc;
-
+	LOG_DBG("STARTING");
 	LOG_PRINTK("Sample program to r/w files on littlefs\n");
 //	init_usb();
 	rc = littlefs_mount(mountpoint);
@@ -387,6 +388,19 @@ int main(void)
 		return 0;
 	}
 
+	// void *storage;
+
+	// struct fs_dirent entry;
+    // LOG_DBG("STARTING");
+	// rc = settings_storage_get(&storage);
+	// if (rc) LOG_PRINTK("Can't fetch storage reference (err=%d)", rc);
+
+	// LOG_PRINTK("Null reference.");
+
+	// rc = fs_stat((const char *)storage, &entry);
+
+	// if (rc) LOG_PRINTK("Can't find the file (err=%d)", rc);
+// settings_subsys_init();
 	http_server_start();
 	return 0;
 }

@@ -43,6 +43,7 @@ endif
 
 config APP_WIPE_STORAGE
 	bool "Option to clear the flash area before mounting"
+	default y
 	help
 	  Use this to force an existing file system to be created.
 
