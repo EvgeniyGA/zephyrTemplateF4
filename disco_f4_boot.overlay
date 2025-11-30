@@ -5,24 +5,12 @@
 		zephyr,shell-uart = &usart1;
 		//zephyr,console = &cdc_acm_uart0;
 		//zephyr,shell-uart = &cdc_acm_uart0;
-		zephyr,code-partition = &slot0_partition;
+		zephyr,code-partition = &boot_partition;
     };
 	aliases {
 		mcuboot-button0 = &button0;
 	};
-	// fstab {
-	// 	compatible = "zephyr,fstab";
-	// 	lfs1: lfs1 {
-	// 		compatible = "zephyr,fstab,littlefs";
-	// 		read-size = <1>;
-	// 		prog-size = <16>;
-	// 		cache-size = <256>;
-	// 		lookahead-size = <32>;
-	// 		block-cycles = <512>;
-	// 		partition = <&lfs1_partition>;
-	// 		mount-point = "/lfs1";
-	// 	};
-	// };
+
 	gpio_keys {
 		compatible = "gpio-keys";
 			button0: button0 {
@@ -86,34 +74,4 @@
 	status = "okay";
 };
 
-&i2c2 {
-	clock-frequency = <I2C_BITRATE_FAST>;
-	pinctrl-0 = <&i2c2_scl_pb10 &i2c2_sda_pb11>;
-	pinctrl-names = "default";
-	status = "okay";
-};
 
-&mac {
-	status = "okay";
-	pinctrl-0 = <&eth_rxd0_pc4
-		     &eth_rxd1_pc5
-		     &eth_ref_clk_pa1
-		     &eth_crs_dv_pa7
-		     &eth_tx_en_pb11
-		     &eth_txd0_pb12
-		     &eth_txd1_pb13>;
-	pinctrl-names = "default";
-	phy-connection-type = "rmii";
-	phy-handle = <&eth_phy>;
-};
-
-&mdio {
-	status = "okay";
-	pinctrl-0 = <&eth_mdio_pa2 &eth_mdc_pc1>;
-	pinctrl-names = "default";
-
-	eth_phy: ethernet-phy@0 {
-		compatible = "ethernet-phy";
-		reg = <0x00>;
-	};
-};

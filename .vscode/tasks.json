@@ -2,6 +2,28 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build boot",
+            "type": "shell",
+            "command": "west",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+                "build",
+				"-p","always",
+                "-b", "stm32f4_disco",
+                "mcuboot/boot/zephyr",
+                "--",
+                "-DOVERLAY_CONFIG=C:/Users/evgeny/Desktop/zephyrTemplateF4/boot.conf",
+                "-DDTC_OVERLAY_FILE=C:/Users/evgeny/Desktop/zephyrTemplateF4/disco_f4_boot.overlay"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "Build",
             "type": "shell",
             "command": "west",
@@ -23,6 +45,28 @@
             "problemMatcher": []
         },
         {
+    "label": "Upload",
+    "type": "shell",
+    "group": "build",
+    "command": "mcumgr.exe",
+    "options": {
+        "shell": {
+            "executable": "cmd.exe",
+            "args": ["/c"]
+        }
+    },
+    "args": [
+       // "-t", "serial",
+        "-d", "COM17",
+        "-m", "4096",
+        "-l", "8192",
+       // "image",
+        "upload",
+        "${workspaceFolder}\\build\\zephyr\\zephyr.signed.bin"
+    ],
+    "problemMatcher": []
+},
+        {
             "label": "Config",
             "type": "shell",
             "command": "west build -t menuconfig",
@@ -37,13 +81,25 @@
         //     "problemMatcher": []
         // },
         {
+            "label": "Flash boot",
+            "type": "shell",
+            "command": "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI.exe",
+            "args": [
+                "--connect", "port=swd", "reset=HWrst",
+                "--hardRst",
+                "--download", "${workspaceFolder}\\build\\zephyr\\zephyr.elf"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "Flash",
             "type": "shell",
             "command": "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI.exe",
             "args": [
                 "--connect", "port=swd", "reset=HWrst",
                 "--hardRst",
-                "--download", "${workspaceFolder}\\build\\zephyr\\zephyr.hex"
+                "--download", "${workspaceFolder}\\build\\zephyr\\zephyr.elf"
             ],
             "group": "build",
             "problemMatcher": []
