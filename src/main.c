@@ -381,7 +381,8 @@ int main(void)
 {
 	int rc;
 	LOG_DBG("STARTING");
-	LOG_PRINTK("Sample program to r/w files on littlefs\n");
+//	boot_request_upgrade(0);
+	LOG_PRINTK("!!Sample program to r/w files on littlefs!!\n");
 //	init_usb();
 	// rc = littlefs_mount(mountpoint);
 	// if (rc < 0) {

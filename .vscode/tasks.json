@@ -15,10 +15,11 @@
                 "build",
 				"-p","always",
                 "-b", "stm32f4_disco",
-                "mcuboot/boot/zephyr",
+                "../mcuboot/boot/zephyr",
                 "--",
-                "-DOVERLAY_CONFIG=C:/Users/evgeny/Desktop/zephyrTemplateF4/boot.conf",
-                "-DDTC_OVERLAY_FILE=C:/Users/evgeny/Desktop/zephyrTemplateF4/disco_f4_boot.overlay"
+                "-Dversion=1.2.3",
+                "-DOVERLAY_CONFIG=C:/Projects/gitZephyr/zephyrTemplateF4/boot.conf",
+                "-DDTC_OVERLAY_FILE=C:/Projects/gitZephyr/zephyrTemplateF4/disco_f4_boot.overlay"
             ],
             "group": "build",
             "problemMatcher": []
@@ -35,9 +36,10 @@
             },
             "args": [
                 "build",
-				"-p","always",
+				"-p", "always",
                 "-b", "stm32f4_disco",
                 "--",
+                "-Dversion=1.2.3",
                 "-DOVERLAY_CONFIG=prj.conf",
                 "-DDTC_OVERLAY_FILE=disco_f4.overlay"
             ],
@@ -45,31 +47,69 @@
             "problemMatcher": []
         },
         {
-    "label": "Upload",
-    "type": "shell",
-    "group": "build",
-    "command": "mcumgr.exe",
-    "options": {
-        "shell": {
-            "executable": "cmd.exe",
-            "args": ["/c"]
-        }
-    },
-    "args": [
-       // "-t", "serial",
-        "-d", "COM17",
-        "-m", "4096",
-        "-l", "8192",
-       // "image",
-        "upload",
-        "${workspaceFolder}\\build\\zephyr\\zephyr.signed.bin"
-    ],
-    "problemMatcher": []
-},
+            "label": "Upload old",
+            "type": "shell",
+            "group": "build",
+            "command": "mcumgr.exe",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+            // "-t", "serial",
+                "-d", "COM17",
+                "-m", "4096",
+                "-l", "8192",
+            // "image",
+                "upload",
+                "${workspaceFolder}\\build\\zephyr\\zephyr.signed.bin"
+            ],
+            "problemMatcher": []
+        },
+
+        {
+            "label": "Upload",
+            "type": "shell",
+            "group": "build",
+            "command": "mcumgr",
+                        "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+                "-c", "acm0", "image", "upload", "${workspaceFolder}\\build\\zephyr\\zephyr.signed.bin"
+            ],
+            "dependsOn": [],
+            "problemMatcher": []
+        },
+
         {
             "label": "Config",
             "type": "shell",
             "command": "west build -t menuconfig",
+            "group": "build",
+            "problemMatcher": []
+        },
+        //mcumgr conn add acm0 type="serial" connstring="dev=COM22,baud=115200"
+        {
+            "label": "mcumgr add conn",
+            "type": "shell",
+            "command": "mcumgr",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "args": [
+                "conn", "add", "acm1",
+                "type=serial",
+                "connstring=\"dev=COM20,baud=115200\""
+            ],
             "group": "build",
             "problemMatcher": []
         },
@@ -99,7 +139,7 @@
             "args": [
                 "--connect", "port=swd", "reset=HWrst",
                 "--hardRst",
-                "--download", "${workspaceFolder}\\build\\zephyr\\zephyr.elf"
+                "--download", "${workspaceFolder}\\build\\zephyr\\zephyr.signed.hex"
             ],
             "group": "build",
             "problemMatcher": []

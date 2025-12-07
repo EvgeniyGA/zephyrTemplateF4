@@ -9,16 +9,27 @@
     };
 	aliases {
 		mcuboot-button0 = &button0;
+		mcuboot-led0 = &led0;
 	};
 
 	gpio_keys {
 		compatible = "gpio-keys";
-			button0: button0 {
+		button0: button0 {
 			label = "SW1";
 			gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>; // uart2rx
 			zephyr,code = <INPUT_KEY_0>;
 		};
 	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led0: led0 {
+			gpios = <&gpiod 13 GPIO_ACTIVE_HIGH>;
+			label = "Boot LED";
+		};
+	};
+
 	// cdc_ncm_eth0: cdc_ncm_eth0 {
 	// 	compatible = "zephyr,cdc-ncm-ethernet";
 	// 	remote-mac-address = "00005E005301";
