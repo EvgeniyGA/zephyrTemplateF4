@@ -173,6 +173,7 @@ static void parse_led_post(uint8_t *buf, size_t len)
 
 	if (leds_dev != NULL) {
 		if (cmd.led_state) {
+			//boot_request_upgrade(0);
 			led_on(leds_dev, cmd.led_num);
 		} else {
 			led_off(leds_dev, cmd.led_num);
@@ -381,7 +382,7 @@ int main(void)
 {
 	int rc;
 	LOG_DBG("STARTING");
-//	boot_request_upgrade(0);
+	boot_request_upgrade(0);
 	LOG_PRINTK("!!Sample program to r/w files on littlefs!!\n");
 //	init_usb();
 	// rc = littlefs_mount(mountpoint);
@@ -402,6 +403,7 @@ int main(void)
 
 	// if (rc) LOG_PRINTK("Can't find the file (err=%d)", rc);
 // settings_subsys_init();
+//boot_request_upgrade(false);
 	http_server_start();
 	return 0;
 }

@@ -47,16 +47,16 @@
 		// boot_partition labeled mcuboot at 0 with size 32K
 		boot_partition: partition@0 {
 			label = "mcuboot";
-			reg = <0x00000000 DT_SIZE_K(128)>;
+			reg = <0x00000000 DT_SIZE_K(64)>;
 		};
 		// the app image goes here
 		slot0_partition: partition@20000 {
 			label = "image-0";
-			reg = <0x00020000 DT_SIZE_K(384)>;
+			reg = <0x00020000 DT_SIZE_K(256)>;
 		};
-		slot1_partition: partition@80000 {
+		slot1_partition: partition@60000 {
 			label = "image-1";
-			reg = <0x00080000 DT_SIZE_K(384)>;
+			reg = <0x00060000 DT_SIZE_K(256)>;
 		};
 		/* Use last half of flash for the filesystem. */
 		lfs1_partition: partition@E0000 {
